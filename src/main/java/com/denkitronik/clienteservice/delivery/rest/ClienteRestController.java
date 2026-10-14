@@ -10,13 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/${api.version}/cliente-service")
@@ -43,22 +39,15 @@ public class ClienteRestController {
     }
 
     @PostMapping("/clientes")
-    public ResponseEntity<?> crearCliente(@Valid @RequestBody Cliente cliente,
-                                          BindingResult result) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(construirErrores(result));
-        }
+    public ResponseEntity<Cliente> crearCliente(@Valid @RequestBody Cliente cliente) {
+        // Validación inválida: MethodArgumentNotValidException -> GlobalExceptionHandler -> 400
         // Si falla el guardado: ClienteServiceException -> GlobalExceptionHandler -> 500
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.save(cliente));
     }
 
     @PutMapping("/clientes/{id}")
-    public ResponseEntity<?> actualizarCliente(@Valid @RequestBody Cliente cliente,
-                                               BindingResult result,
-                                               @PathVariable Long id) {
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(construirErrores(result));
-        }
+    public ResponseEntity<Cliente> actualizarCliente(@Valid @RequestBody Cliente cliente,
+                                                     @PathVariable Long id) {
         // update lanza ClienteNotFoundException si no existe -> 404 automático
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.update(id, cliente));
     }
@@ -73,15 +62,5 @@ public class ClienteRestController {
     @GetMapping("/clientes/regiones")
     public ResponseEntity<List<Region>> listarRegiones() {
         return ResponseEntity.ok(clienteService.findAllRegiones());
-    }
-
-    private Map<String, Object> construirErrores(BindingResult result) {
-        Map<String, Object> errores = new HashMap<>();
-        List<String> listaErrores = result.getFieldErrors()
-                .stream()
-                .map(fe -> "El campo '" + fe.getField() + "' " + fe.getDefaultMessage())
-                .collect(Collectors.toList());
-        errores.put("errors", listaErrores);
-        return errores;
     }
 }
