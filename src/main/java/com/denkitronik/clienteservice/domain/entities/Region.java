@@ -1,4 +1,5 @@
 package com.denkitronik.clienteservice.domain.entities;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,5 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String nombre;
 }

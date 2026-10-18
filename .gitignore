@@ -34,7 +34,6 @@ build/
 
 ### Archivos locales con credenciales (NO subir a repositorio publico) ###
 src/main/resources/application-*.properties
-compose.yml
 compose.yaml
 docker-compose.yml
 docker-compose.yaml
