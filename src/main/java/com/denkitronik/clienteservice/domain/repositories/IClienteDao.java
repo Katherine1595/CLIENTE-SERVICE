@@ -4,7 +4,9 @@ import com.denkitronik.clienteservice.domain.entities.Cliente;
 import com.denkitronik.clienteservice.domain.entities.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
+import java.util.Optional;
 
 public interface IClienteDao extends JpaRepository<Cliente, Long> {
 
@@ -18,4 +20,7 @@ public interface IClienteDao extends JpaRepository<Cliente, Long> {
 
     @Query("from Region")
     List<Region> findAllRegiones();
+
+    @Query("from Region r where r.id = :id")
+    Optional<Region> findRegionById(@Param("id") Long id);
 }
